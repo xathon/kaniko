@@ -481,6 +481,11 @@ func swapDir(pathA, pathB string) (err error) {
 	}
 	tmp := kConfig.KanikoSwapDir
 
+	err = os.RemoveAll(tmp)
+	if err != nil {
+		return fmt.Errorf("failed to remove tempdir %s: %w", tmp, err)
+	}
+
 	err = os.Rename(pathA, tmp)
 	if err != nil {
 		return fmt.Errorf("failed to rename (1) %s -> %s: %w", pathA, tmp, err)
