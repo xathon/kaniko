@@ -331,7 +331,22 @@ func addHiddenFlags(cmd *cobra.Command) {
 // conducting the relevant operations if it is not
 func checkKanikoDir(dir string) error {
 	if dir != constants.DefaultKanikoPath {
-
+		
+		// Don't conduct the copy operations if the working directory already exists and is nonempty.
+		if fi, err := os.Stat(dir); err != nil {
+			if !os.IsNotExist(err) {
+				return err
+			}
+		} else {	
+			entries, err := os.ReadDir(dir)
+			if err != nil {
+				return err
+			}
+			if len(entries) != 0 {
+				return nil
+			}
+		}
+			
 		// The destination directory may be across a different partition, so we cannot simply rename/move the directory in this case.
 		if _, err := util.CopyDir(constants.DefaultKanikoPath, dir, util.FileContext{}, util.DoNotChangeUID, util.DoNotChangeGID, fs.FileMode(0o600), true); err != nil {
 			return err
