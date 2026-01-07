@@ -333,7 +333,7 @@ func checkKanikoDir(dir string) error {
 	if dir != constants.DefaultKanikoPath {
 		
 		// Don't conduct the copy operations if the working directory already exists and is nonempty.
-		if fi, err := os.Stat(dir); err != nil {
+		if _, err := os.Stat(dir); err != nil {
 			if !os.IsNotExist(err) {
 				return err
 			}
